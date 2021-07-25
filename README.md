@@ -4,3 +4,22 @@ This repository demonstrates Entity Framework's Fluent API which is used in Code
 
 ## Note
 Fluent API takes precedence over Data Annotations.
+
+## Setup
+Check the following configuration file:
+
+`EfFluentApi.ConsoleApp\appsettings.json`
+
+Ensure that the connection string is set correctly and can connect to your test database:
+
+```
+{
+  "ConnectionStrings": {
+    "EfFluentApi" : "Server=(local);Database=EfFluentApi;Trusted_Connection=True;"
+  }
+}
+```
+
+## WARNING
+
+Running the console app will drop the `EfFluentApi` database and recreate it based on the mapping specified in the program.
