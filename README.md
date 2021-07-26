@@ -15,10 +15,14 @@ Ensure that the connection string is set correctly and can connect to your test 
 ```
 {
   "ConnectionStrings": {
-    "EfFluentApi" : "Server=(local);Database=EfFluentApi;Trusted_Connection=True;"
+    "EfFluentApi" : "Server=(local);Database=EfFluentApi;Trusted_Connection=True;MultipleActiveResultSets=true;"
   }
 }
 ```
+
+Notice that MARS (MultipleActiveResultSets) should be on.
+
+The project will fail if run as is. The reason is that `Category.Products` is not loaded, and you need to specify a type of loading (Eager, Lazy or Explicit). Comments are place in different places of the code, and you need to follow them to enable the loading that you want to test.
 
 ## WARNING
 

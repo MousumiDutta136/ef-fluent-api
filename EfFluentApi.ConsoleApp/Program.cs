@@ -18,26 +18,26 @@ namespace EfFluentApi.ConsoleApp
 
             var connectionString = _configurationRoot.GetConnectionString("EfFluentApi");
             var options = new DbContextOptionsBuilder<EfFluentApiContext>()
+                // .UseLazyLoadingProxies()                     // <-- Use for enabling Lazy Loading
                 .UseSqlServer(connectionString)
                 .Options;
 
-            using var context = new EfFluentApiContext(options);
-
-            CreateDb(context);
-
-            Populate(context);
-
-            Print(context);
+            CreateDb(options);
+            Populate(options);
+            Print(options);
 
             Console.WriteLine("---------- Console App Ended ----------");
         }
 
-        private static void Print(EfFluentApiContext context)
+        private static void Print(DbContextOptions options)
         {
+            using var context = new EfFluentApiContext(options);
             Console.WriteLine("Printing database data...");
-            foreach (var category in context.Categories)
+            foreach (var category in context.Categories)                                // <-- Use with Lazy loading
+            // foreach (var category in context.Categories.Include(c => c.Products))    // <-- Use for Eager loading
             {
                 Console.WriteLine(category);
+                // context.Entry(category).Collection(c => c.Products).Load();          // <-- Use for Explicit loading
                 foreach (var product in category.Products)
                 {
                     Console.WriteLine(product);
@@ -45,15 +45,16 @@ namespace EfFluentApi.ConsoleApp
             }
         }
 
-        private static void CreateDb(EfFluentApiContext context)
+        private static void CreateDb(DbContextOptions options)
         {
+            using var context = new EfFluentApiContext(options);
             Console.WriteLine("Deleting database...");
             context.Database.EnsureDeleted();
             Console.WriteLine("Creating database...");
             context.Database.EnsureCreated();
         }
 
-        private static void Populate(EfFluentApiContext context)
+        private static void Populate(DbContextOptions options)
         {
             Console.WriteLine("Populating database...");
             var categories = new[]
@@ -70,6 +71,7 @@ namespace EfFluentApi.ConsoleApp
                     new Product { Name = "Sneakers", Description = "Sneakers in all sizes"}
                 }}
             };
+            using var context = new EfFluentApiContext(options);
             context.Categories.AddRange(categories);
             context.SaveChanges();
         }
