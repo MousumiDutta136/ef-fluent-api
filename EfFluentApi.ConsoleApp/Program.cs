@@ -18,7 +18,7 @@ namespace EfFluentApi.ConsoleApp
 
             var connectionString = _configurationRoot.GetConnectionString("EfFluentApi");
             var options = new DbContextOptionsBuilder<EfFluentApiContext>()
-                // .UseLazyLoadingProxies()                     // <-- Use for enabling Lazy Loading
+                // .UseLazyLoadingProxies()                                             // <-- Use for enabling Lazy Loading
                 .UseSqlServer(connectionString)
                 .Options;
 
